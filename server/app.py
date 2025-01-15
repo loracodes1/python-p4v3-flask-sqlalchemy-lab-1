@@ -38,6 +38,34 @@ def earthquakes(id):
     body = {'message': f"Earthquake {id} not found."}
     return make_response(body, 404)
 
+@app.route('/earthquakes/magnitude/<float:magnitude>')
+def earthquakes(magnitude):
+    quakes = Earthquake.query.filter(Earthquake.magnitude>=magnitude).first()
+
+    if quakes is not None:
+        body = {
+  "count": 2,
+  "quakes": [
+    {
+      "id": 1,
+      "location": "Chile",
+      "magnitude": 9.5,
+      "year": 1960
+    },
+    {
+      "id": 2,
+      "location": "Alaska",
+      "magnitude": 9.2,
+      "year": 1964
+    }
+  ]
+}
+        return make_response(body)
+    
+    body = {'message': f"Earthquake {id} not found."}
+    return make_response(body, 404)
+
+    
 
 
 
