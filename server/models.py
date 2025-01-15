@@ -12,4 +12,7 @@ class Earthquake(db.Model,SerializerMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     magnitude =db.Column(db.Float)
     location =db.Column(db.String)
-    year= db.column(db.Integer)
+    year= db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"<Earthquake {self.id}, {self.magnitude}, {self.location}, {self.year}>"
