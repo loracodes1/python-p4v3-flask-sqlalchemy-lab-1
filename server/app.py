@@ -1,7 +1,7 @@
 # server/app.py
 #!/usr/bin/env python3
 
-from flask import Flask, make_response
+from flask import Flask, make_response, jsonify
 from flask_migrate import Migrate
 
 from models import db, Earthquake
@@ -39,28 +39,22 @@ def earthquakes(id):
     return make_response(body, 404)
 
 @app.route('/earthquakes/magnitude/<float:magnitude>')
-def earthquakes(magnitude):
-    quakes = Earthquake.query.filter(Earthquake.magnitude>=magnitude).first()
-
-    if quakes is not None:
-        body = {
-  "count": 2,
-  "quakes": [
-    {
-      "id": 1,
-      "location": "Chile",
-      "magnitude": 9.5,
-      "year": 1960
-    },
-    {
-      "id": 2,
-      "location": "Alaska",
-      "magnitude": 9.2,
-      "year": 1964
+def get_earthquakes_by_magnitude(magnitude):
+    quakes = Earthquake.query.filter(Earthquake.magnitude >= magnitude).all()
+    quake_list = [
+        {
+            "id": quake.id,
+            "location": quake.location,
+            "magnitude": quake.magnitude,
+            "year": quake.year
+        }
+        for quake in quakes
+    ]
+    body = {
+        "count": len(quake_list),
+        "quakes": quake_list
     }
-  ]
-}
-        return make_response(body)
+    return make_response(jsonify(body), 200)
     
     body = {'message': f"Earthquake {id} not found."}
     return make_response(body, 404)
